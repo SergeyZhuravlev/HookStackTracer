@@ -3,5 +3,5 @@
 
 HookStackTracerSettings GetHookStackTracerSettings()
 {
-	return{ "e:\\TracerDb.bin", "e:\\TracerResults.log", "e:\\TracerConclusion.log" };//to do: Implement loading from settings file and caching settings.
+	return{ "e:\\TracerDb.bin", "e:\\TracerResults.log", "e:\\TracerConclusion.log", nullptr };//to do: Implement loading from settings file and caching settings.
 }

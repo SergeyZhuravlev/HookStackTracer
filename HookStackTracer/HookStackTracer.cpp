@@ -25,6 +25,8 @@ int _tmain(int argc, _TCHAR* argv[])
 		std::cout << "Process..." << std::endl;
 		auto a = CreateEventExA(nullptr, nullptr, 0, 0);
 		auto b = CreateEventExW(nullptr, nullptr, 0, 0);
+		//for(int i = 1000; i>=0; --i)
+			CreateEvent(nullptr, 0, 0, nullptr);
 		CloseHandle(a);
 		CloseHandle(b);
 		/*-------- to del*/
@@ -34,6 +36,8 @@ int _tmain(int argc, _TCHAR* argv[])
 		auto recordsAmount = db.ReadRecordsAmount();
 		std::cout << "Begin analysys " << recordsAmount << std::endl;
 		Analysys as(&db);
+		as.Initialize();
+		std::cout << "Executing" << std::endl;
 		as.Execute();
 		std::cout << "Finished analysys" << std::endl;
 		_getch();

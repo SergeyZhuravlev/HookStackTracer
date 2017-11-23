@@ -5,7 +5,7 @@
 
 enum class CallType
 {
-	CollectEvent = 0,
+	CreateEvent_ = 0,
 	CloseHandle = 1
 };
 

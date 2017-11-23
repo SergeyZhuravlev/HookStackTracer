@@ -20,7 +20,7 @@ void CollectInfo(HANDLE systemHandle, CallType callType)
 
 void CollectEventInfo(HANDLE createEventExResult)
 {
-	CollectInfo(createEventExResult, CallType::CollectEvent);
+	CollectInfo(createEventExResult, CallType::CreateEvent_);
 }
 
 void CollectCloseHandleInfo(HANDLE createEventExResult)

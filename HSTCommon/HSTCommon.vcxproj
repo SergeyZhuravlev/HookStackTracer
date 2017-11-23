@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClInclude Include="CallInfo.h" />
     <ClInclude Include="CriticalSectionBasicLocable.h" />
+    <ClInclude Include="Logger.h" />
     <ClInclude Include="TracerDb.h" />
     <ClInclude Include="HookStackTracerSettings.h" />
     <ClInclude Include="stdafx.h" />
