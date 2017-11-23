@@ -4,19 +4,57 @@
 #include "stdafx.h"
 #include "..\HookStackTracerDll\HookStackTraceDll.h"
 #include "windows.h"
+#include <exception>
+#include <conio.h>
+#include <iostream>
+#include "..\HSTCommon\TracerDb.h"
+#include "Analysys.h"
+#include "DebugPrivilege.h"
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	//auto c = CreateEventExA(nullptr, nullptr, 0, 0);
-	InitializeHookStackCollector();
-	//TestHookStackCollector();
+	try 
+	{
+		std::cout << "Initializing..." << std::endl;
+		std::cout << "EnableDebugPrivilege..." << std::endl;
+		if(!EnableDebugPrivilege())
+			std::cout << "Can't enable DebugPrivilege" << std::endl;
+		/*to del --------*/
+		std::cout << "Initializing local..." << std::endl;
+		InitializeHookStackCollector();
+		std::cout << "Process..." << std::endl;
+		auto a = CreateEventExA(nullptr, nullptr, 0, 0);
+		auto b = CreateEventExW(nullptr, nullptr, 0, 0);
+		CloseHandle(a);
+		CloseHandle(b);
+		/*-------- to del*/
+		std::cout << "TracerDb open..." << std::endl;
+		TracerDb db;
+		db.OpenRead();
+		auto recordsAmount = db.ReadRecordsAmount();
+		std::cout << "Begin analysys " << recordsAmount << std::endl;
+		Analysys as(&db);
+		as.Execute();
+		std::cout << "Finished analysys" << std::endl;
+		_getch();
+	}
+	catch (std::exception& e)
+	{
+		std::cout << "Work error: " << e.what() << std::endl;
+		_getch();
+	}
 
-	auto a = CreateEventExA(nullptr, nullptr, 0, 0);
-	auto b = CreateEventExW(nullptr, nullptr, 0, 0);
-	CloseHandle(a);
-	CloseHandle(b);
-
-	DeInitializeHookStackCollector();
+	/*to del --------*/
+	try
+	{
+		DeInitializeHookStackCollector();
+	}
+	catch (std::exception& e)
+	{
+		std::cout << "Deinit error: " << e.what() << std::endl;
+		_getch();
+	}
+	/*-------- to del*/
 	return 0;
 }
 

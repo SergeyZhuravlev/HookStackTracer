@@ -25,7 +25,7 @@ public:
 		DWORD threadId = GetCurrentThreadId();
 		auto result = _infos.find(threadId);
 		if (result == _infos.cend())
-			TerminateProcess(GetCurrentProcess(), 100500);
+			/*std::abort();*/ TerminateProcess(GetCurrentProcess(), 100500);
 		return result->second;
 	}
 

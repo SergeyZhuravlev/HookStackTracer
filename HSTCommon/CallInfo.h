@@ -1,6 +1,7 @@
 #pragma once
 #include "Windows.h"
 #include <array>
+#include <ctime>
 
 enum class CallType
 {
@@ -19,5 +20,6 @@ struct CallInfo
 	std::array<void*, MAX_STACK_FRAMES_FOR_CAPTURE> stackFrames;
 	DWORD stackHash;
 	HANDLE systemHandle;
+	std::time_t callTime;
 };
 #pragma pack (pop)

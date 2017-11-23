@@ -6,9 +6,14 @@
 #include "Patcher.h"
 #include "HookStackTraceDll.h"
 #include "Windows.h"
+#include "..\HSTCommon\TracerDb.h"
+#include "TracerDbInstance.h"
+
+TracerDb tracerDb;
 
 void InitializeHookStackCollector()
 {
+	tracerDb.OpenWrite();
 	replaceFunctionByMemoryPatch(CreateEventExA, CreateEventExAHandlerPtr, [](void** oldHandler)
 	{
 		CreateEventExAOldHandlerPtr = oldHandler;
@@ -31,6 +36,7 @@ void DeInitializeHookStackCollector()
 	replaceFunctionByMemoryPatch(CreateEventExA, CreateEventExAOldHandlerPtr);
 	replaceFunctionByMemoryPatch(CreateEventExW, CreateEventExWOldHandlerPtr);
 	replaceFunctionByMemoryPatch(CloseHandle, CloseHandleOldHandlerPtr);
+	tracerDb.Close();
 }
 
 /*void TestHookStackCollector()

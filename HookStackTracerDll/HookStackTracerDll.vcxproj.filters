@@ -51,6 +51,9 @@
     <ClInclude Include="InHookThreadInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TracerDbInstance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

@@ -27,9 +27,18 @@
     <ClInclude Include="CallInfo.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="HookStackTracerSettings.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="TracerDb.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="HookStackTracerSettings.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
