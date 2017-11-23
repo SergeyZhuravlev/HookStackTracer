@@ -1,28 +1,14 @@
 #include "stdafx.h"
 #include "PatchHandlers.h"
-#include "EnvStateSave.h"
 #include "CpuStateSave.h"
 #include <Windows.h>
 #include "ThreadsInfo.h"
+#include "InHookThreadInfo.h"
+#include "Collector.h"
 
-ThreadsInfo inFunctionThreadInfo;
+ThreadsInfo<InHookThreadInfo> inHookThreadInfo;
 
-void CollectEventInfo(HANDLE createEventExResult)
-{
-	EnvStateSave state;
-}
-
-void CollectCloseHandleInfo(HANDLE createEventExResult)
-{
-	EnvStateSave state;
-}
-
-/*int Dummy()
-{
-	return 7;
-}*/
-
-void** CreateEventExAOldHandlerPtr = nullptr /*= Dummy*/;
+void** CreateEventExAOldHandlerPtr = nullptr;
 void* CreateEventExAOldHandler = nullptr;
 __declspec(naked) void CreateEventExAHandler()
 {
@@ -31,7 +17,7 @@ __declspec(naked) void CreateEventExAHandler()
 	SaveCpuState(simd_state1, ebx_state1, ecx_state1, loo1)
 	__asm mov stackTopBeforeCall, ebp
 	stackTopBeforeCall += 1;//ebp size
-	inFunctionThreadInfo.AddThreadInfo({*stackTopBeforeCall});
+	inHookThreadInfo.AddThreadInfo({*stackTopBeforeCall});
 	__asm mov ebx, stackTopBeforeCall
 	__asm mov ecx, offset returnToMe
 	__asm mov [ebx], ecx
@@ -44,8 +30,8 @@ forPushNewRetAddress:
 	__asm mov createEventExResult, eax
 	__asm mov stackTopBeforeCall, ebp
 	stackTopBeforeCall += 1;//ebp size
-	*stackTopBeforeCall = inFunctionThreadInfo.GetThreadInfo().ReturnAddress;
-	inFunctionThreadInfo.RemoveThreadInfo();
+	*stackTopBeforeCall = inHookThreadInfo.GetThreadInfo().ReturnAddress;
+	inHookThreadInfo.RemoveThreadInfo();
 	CollectEventInfo(createEventExResult);
 	RestoreCpuState(simd_state)
 	__asm ret
@@ -53,7 +39,7 @@ forPushNewRetAddress:
 void* CreateEventExAHandlerTmp = CreateEventExAHandler;
 void** CreateEventExAHandlerPtr = &CreateEventExAHandlerTmp;
 
-void** CreateEventExWOldHandlerPtr = nullptr /*= Dummy*/;
+void** CreateEventExWOldHandlerPtr = nullptr;
 void* CreateEventExWOldHandler = nullptr;
 __declspec(naked) void CreateEventExWHandler()
 {
@@ -62,7 +48,7 @@ __declspec(naked) void CreateEventExWHandler()
 	SaveCpuState(simd_state1, ebx_state1, ecx_state1, loo1)
 	__asm mov stackTopBeforeCall, ebp
 	stackTopBeforeCall += 1;//ebp size
-	inFunctionThreadInfo.AddThreadInfo({ *stackTopBeforeCall });
+	inHookThreadInfo.AddThreadInfo({ *stackTopBeforeCall });
 	__asm mov ebx, stackTopBeforeCall
 	__asm mov ecx, offset returnToMe
 	__asm mov[ebx], ecx
@@ -75,8 +61,8 @@ forPushNewRetAddress :
 	__asm mov createEventExResult, eax
 	__asm mov stackTopBeforeCall, ebp
 	stackTopBeforeCall += 1;//ebp size
-	*stackTopBeforeCall = inFunctionThreadInfo.GetThreadInfo().ReturnAddress;
-	inFunctionThreadInfo.RemoveThreadInfo();
+	*stackTopBeforeCall = inHookThreadInfo.GetThreadInfo().ReturnAddress;
+	inHookThreadInfo.RemoveThreadInfo();
 	CollectEventInfo(createEventExResult);
 	RestoreCpuState(simd_state)
 	__asm ret
@@ -84,7 +70,7 @@ forPushNewRetAddress :
 void* CreateEventExWHandlerTmp = CreateEventExWHandler;
 void** CreateEventExWHandlerPtr = &CreateEventExWHandlerTmp;
 
-void** CloseHandleOldHandlerPtr = nullptr /*= Dummy*/;
+void** CloseHandleOldHandlerPtr = nullptr;
 void* CloseHandleOldHandler = nullptr;
 __declspec(naked) void CloseHandleHandler()
 {

@@ -45,6 +45,12 @@
     <ClInclude Include="ThreadsInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Collector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InHookThreadInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

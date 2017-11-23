@@ -78,9 +78,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApiDefines.h" />
+    <ClInclude Include="Collector.h" />
     <ClInclude Include="CpuStateSave.h" />
     <ClInclude Include="EnvStateSave.h" />
     <ClInclude Include="HookStackTraceDll.h" />
+    <ClInclude Include="InHookThreadInfo.h" />
     <ClInclude Include="Patcher.h" />
     <ClInclude Include="PatchHandlers.h" />
     <ClInclude Include="stdafx.h" />
@@ -102,6 +104,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HSTCommon\HSTCommon.vcxproj">
+      <Project>{e908251d-0518-40a4-9ec6-6099b8d70735}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
