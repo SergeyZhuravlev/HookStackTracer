@@ -90,9 +90,6 @@
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HookStackTracerDll\HookStackTracerDll.vcxproj">
-      <Project>{bc0ddf62-64e5-415d-841b-5f5221d12c9a}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\HSTCommon\HSTCommon.vcxproj">
       <Project>{e908251d-0518-40a4-9ec6-6099b8d70735}</Project>
     </ProjectReference>

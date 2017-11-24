@@ -19,7 +19,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		std::cout << "EnableDebugPrivilege..." << std::endl;
 		if(!EnableDebugPrivilege())
 			std::cout << "Can't enable DebugPrivilege" << std::endl;
-		/*to del --------*/
+		/*to del --------
 		std::cout << "Initializing local..." << std::endl;
 		InitializeHookStackCollector();
 		std::cout << "Process..." << std::endl;
@@ -30,7 +30,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		CreateEventW(nullptr, 0, 0, nullptr);
 		CloseHandle(a);
 		CloseHandle(b);
-		/*-------- to del*/
+		-------- to del*/
 		std::cout << "TracerDb open..." << std::endl;
 		TracerDb db;
 		db.OpenRead();
@@ -52,7 +52,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		_getch();
 	}
 
-	/*to del --------*/
+	/*to del --------
 	try
 	{
 		DeInitializeHookStackCollector();
@@ -62,7 +62,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		std::cout << "Deinit error: " << e.what() << std::endl;
 		_getch();
 	}
-	/*-------- to del*/
+	-------- to del*/
 	return 0;
 }
 
