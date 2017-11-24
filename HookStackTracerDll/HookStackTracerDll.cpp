@@ -24,6 +24,16 @@ void InitializeHookStackCollector()
 		CreateEventExWOldHandlerPtr = oldHandler;
 		CreateEventExWOldHandler = *oldHandler;
 	});
+	replaceFunctionByMemoryPatch(CreateEventA, CreateEventAHandlerPtr, [](void** oldHandler)
+	{
+		CreateEventAOldHandlerPtr = oldHandler;
+		CreateEventAOldHandler = *oldHandler;
+	});
+	replaceFunctionByMemoryPatch(CreateEventW, CreateEventWHandlerPtr, [](void** oldHandler)
+	{
+		CreateEventWOldHandlerPtr = oldHandler;
+		CreateEventWOldHandler = *oldHandler;
+	});
 	replaceFunctionByMemoryPatch(CloseHandle, CloseHandleHandlerPtr, [](void** oldHandler)
 	{
 		CloseHandleOldHandlerPtr = oldHandler;
@@ -35,6 +45,8 @@ void DeInitializeHookStackCollector()
 {
 	replaceFunctionByMemoryPatch(CreateEventExA, CreateEventExAOldHandlerPtr);
 	replaceFunctionByMemoryPatch(CreateEventExW, CreateEventExWOldHandlerPtr);
+	replaceFunctionByMemoryPatch(CreateEventA, CreateEventAOldHandlerPtr);
+	replaceFunctionByMemoryPatch(CreateEventW, CreateEventWOldHandlerPtr);
 	replaceFunctionByMemoryPatch(CloseHandle, CloseHandleOldHandlerPtr);
 	tracerDb.Close();
 }

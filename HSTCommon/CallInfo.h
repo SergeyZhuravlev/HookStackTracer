@@ -3,10 +3,13 @@
 #include <array>
 #include <ctime>
 
-enum class CallType
+enum class CallType: uint32_t
 {
-	CreateEvent_ = 0,
-	CloseHandle = 1
+	CreateEventA = 0,
+	CreateEventW,
+	CreateEventExA,
+	CreateEventExW,
+	CloseHandle,
 };
 
 const size_t MAX_STACK_FRAMES_FOR_CAPTURE = 1024;

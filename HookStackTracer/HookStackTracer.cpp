@@ -25,8 +25,9 @@ int _tmain(int argc, _TCHAR* argv[])
 		std::cout << "Process..." << std::endl;
 		auto a = CreateEventExA(nullptr, nullptr, 0, 0);
 		auto b = CreateEventExW(nullptr, nullptr, 0, 0);
-		//for(int i = 1000; i>=0; --i)
-			CreateEvent(nullptr, 0, 0, nullptr);
+		for(int i = 4; i>0; --i)
+			CreateEventA(nullptr, 0, 0, nullptr);
+		CreateEventW(nullptr, 0, 0, nullptr);
 		CloseHandle(a);
 		CloseHandle(b);
 		/*-------- to del*/

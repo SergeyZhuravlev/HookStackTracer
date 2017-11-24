@@ -75,13 +75,27 @@ private:
 	{
 		switch (callType)
 		{
-		case CallType::CreateEvent_:
-			return "CreateEvent_";
+		case CallType::CreateEventA:
+			return "CreateEventA";
+		case CallType::CreateEventW:
+			return "CreateEventW";
+		case CallType::CreateEventExA:
+			return "CreateEventExA";
+		case CallType::CreateEventExW:
+			return "CreateEventExW";
 		case CallType::CloseHandle:
 			return "CloseHandle";
 		default:
 			throw std::runtime_error("Unknown call type " + std::to_string((int)callType));
 		}
+	}
+
+	std::string toString(std::time_t time)
+	{
+		char mbstr[100];
+		if (std::strftime(mbstr, sizeof(mbstr), "%A %c", std::localtime(&time)))
+			return mbstr;
+		return std::to_string(time);
 	}
 
 	void output(const CallInfoExtended& info)
@@ -92,12 +106,12 @@ private:
 			<< toString(info.callInfo.callType)
 			<< " for handle "
 			<< (DWORD64)info.callInfo.systemHandle
-			<< " with stack frames amount="
-			<< info.callInfo.capturedFrames
 			<< " with stack frames hash="
 			<< info.callInfo.stackHash
+			<< " with stack frames amount="
+			<< info.callInfo.capturedFrames
 			<< " on time "
-			<< info.callInfo.callTime
+			<< toString(info.callInfo.callTime)
 			<< std::endl;
 		for (auto&& stackFrame : info.decoded)
 		{

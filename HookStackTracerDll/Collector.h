@@ -6,7 +6,7 @@
 #include "TracerDbInstance.h"
 #include <array>
 
-void CollectInfo(HANDLE systemHandle, CallType callType)
+void CollectHandleInfo(HANDLE systemHandle, CallType callType)
 {
 	EnvStateSave state;
 	CallInfo info{ callType };
@@ -16,14 +16,4 @@ void CollectInfo(HANDLE systemHandle, CallType callType)
 	std::fill(info.stackFrames.begin(), info.stackFrames.end(), nullptr);
 	info.capturedFrames = CaptureStackBackTrace(0, info.stackFrames.size(), info.stackFrames.data(), &info.stackHash);
 	tracerDb.Write(info);
-}
-
-void CollectEventInfo(HANDLE createEventExResult)
-{
-	CollectInfo(createEventExResult, CallType::CreateEvent_);
-}
-
-void CollectCloseHandleInfo(HANDLE createEventExResult)
-{
-	CollectInfo(createEventExResult, CallType::CloseHandle);
 }
