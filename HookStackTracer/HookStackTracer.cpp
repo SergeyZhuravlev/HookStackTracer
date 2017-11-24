@@ -35,11 +35,14 @@ int _tmain(int argc, _TCHAR* argv[])
 		TracerDb db;
 		db.OpenRead();
 		auto recordsAmount = db.ReadRecordsAmount();
-		std::cout << "Begin analysys " << recordsAmount << std::endl;
+		std::cout << "Begin analysys for nearly " << recordsAmount << " records amount " << std::endl;
+		std::cout << "Initializing" << std::endl;
 		Analysys as(&db);
 		as.Initialize();
 		std::cout << "Executing" << std::endl;
 		as.Execute();
+		std::cout << "MakeConclusion" << std::endl;
+		as.MakeConclusion();
 		std::cout << "Finished analysys" << std::endl;
 		_getch();
 	}

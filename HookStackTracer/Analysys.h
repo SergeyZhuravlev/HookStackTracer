@@ -5,6 +5,8 @@
 #include "CallInfoExtended.h"
 #include "..\HSTCommon\Logger.h"
 #include <sstream>
+#include <unordered_map>
+#include <iterator>
 
 #pragma comment(lib, "dbghelp.lib")
 
@@ -51,24 +53,66 @@ public:
 
 	void Execute()
 	{
-		auto recordsAmount = _tracerDb.ReadRecordsAmount();
-		_conclusion.Info("Analysys for records amount: " + std::to_string(recordsAmount));
+		auto recordPosition = _tracerDb.ReadRecordsAmount();
+		_conclusion.Info("Analysys for records amount: " + std::to_string(recordPosition));
 		_tracerDb.BeginReading();
-		while(recordsAmount>0)
+		while(recordPosition>0)
 		{
-			--recordsAmount;
+			--recordPosition;
 			CallInfoExtended info;
 			_tracerDb.Read(info.callInfo);
 			decode(info);
-			output(info);
+			output(info, recordPosition);
 			analysys(info);
 		}
 	}
 
+	void MakeConclusion()
+	{
+		using StackHashToAmountPair = std::pair<DWORD, DWORD>;
+		using StackHashToAmount = std::unordered_map<DWORD, DWORD>;
+		StackHashToAmount stackHashToAmount;
+		_conclusion.Info("##############################################");
+		_conclusion.Info("Active handles: " + std::to_string(_activeHandles.size()));
+		for (auto& handle : _activeHandles)
+		{
+			_conclusion.Info(toString(handle.second));
+			stackHashToAmount[handle.second.callInfo.stackHash] = stackHashToAmount[handle.second.callInfo.stackHash] + 1;
+		}
+		_conclusion.Info("##############################################");
+		_conclusion.Info("Not equal stacks amount: " + std::to_string(stackHashToAmount.size()));
+		_conclusion.Info("Unique stacks amount: " 
+			+ std::to_string(std::count_if(stackHashToAmount.cbegin(), stackHashToAmount.cend(), [](const StackHashToAmount::value_type& stackHash) {return stackHash.second < 2; })));
+		std::vector<StackHashToAmountPair> notUniqueStacks;
+		std::copy_if(stackHashToAmount.cbegin(), stackHashToAmount.cend(), std::back_inserter(notUniqueStacks), [](const StackHashToAmount::value_type& stackHash) {return stackHash.second > 1; });
+		_conclusion.Info("Not unique stacks amount: " + std::to_string(notUniqueStacks.size()));
+		std::sort(notUniqueStacks.begin(), notUniqueStacks.end(), [](const StackHashToAmount::value_type& stackHash1, const StackHashToAmount::value_type& stackHash2) {return stackHash1.second > stackHash2.second; });
+		_conclusion.Info("Stack hashes and their amounts: ");
+		for (auto& stack : notUniqueStacks)
+			_conclusion.Info("For stack hash=" + std::to_string(stack.first) + " amount=" + std::to_string(stack.second));
+		_conclusion.Info("##############################################");
+		_conclusion.Info("All done!");
+	}
+
 private:
+	std::unordered_map<HANDLE, CallInfoExtended> _activeHandles;
 	void analysys(const CallInfoExtended& info)
 	{
-		
+		if (info.callInfo.callType == CallType::CloseHandle)
+		{
+			auto founded = _activeHandles.find(info.callInfo.systemHandle);
+			if (founded == _activeHandles.cend())
+				return;
+			_activeHandles.erase(founded);
+			return;
+		}
+		auto founded = _activeHandles.find(info.callInfo.systemHandle);
+		if (founded != _activeHandles.cend())
+		{
+			_conclusion.Error("Created duplicate handle o_O:? " + toString(info));
+			return;
+		}
+		_activeHandles.emplace(info.callInfo.systemHandle, info);
 	}
 
 	std::string toString(CallType callType)
@@ -98,8 +142,8 @@ private:
 		return std::to_string(time);
 	}
 
-	void output(const CallInfoExtended& info)
-	{
+	std::string toString(const CallInfoExtended& info)
+	{		
 		std::stringstream buf;
 		buf
 			<< "Call "
@@ -130,8 +174,13 @@ private:
 				<< stackFrame.Displacement
 				<< std::endl;
 		}
-		_results.Info(buf.str());
-		_results.WriteLine("=============================================================");
+		buf << "=============================================================" << std::endl;
+		return buf.str();
+	}
+
+	void output(const CallInfoExtended& info, TracerDb::RecordPosition recordsAmount)
+	{	
+		_results.Info(toString(info) + " - " + std::to_string(recordsAmount));
 	}
 
 	void decode(CallInfoExtended& info) const
